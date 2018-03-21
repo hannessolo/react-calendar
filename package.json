@@ -1,0 +1,26 @@
+{
+  "name": "react-calendar",
+  "version": "0.0.1",
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "express": "^4.16.3",
+    "nodemon": "^1.17.2",
+    "path": "^0.12.7",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-router-dom": "^4.2.2",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12"
+  },
+  "scripts": {
+    "dev-server": "nodemon ./dev-server/server.js",
+    "build": "webpack -p",
+    "dev-build": "webpack -d --watch"
+  },
+  "devDependencies": {
+    "@types/express": "^4.11.1"
+  }
+}

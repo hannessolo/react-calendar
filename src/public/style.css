@@ -1,0 +1,72 @@
+html, body {
+    margin: 0;
+}
+
+.calendar {
+    margin: 5vh auto auto;
+    width: 80%;
+    max-width: 1000px;
+    height: 90vh;
+    display: flex;
+    flex-direction: row;
+    border-radius: 4px;
+    border: 1px solid #E0E0E0;
+    overflow: scroll;
+}
+
+.calendarDay {
+    height: 1200px;
+    position: relative;
+    flex-grow: 1;
+    border: 1px solid #E0E0E0;
+    background: #FAFAFA repeating-linear-gradient(
+            transparent,
+            transparent 50px,
+            #EEEEEE 50px,
+            #EEEEEE 100px
+    );
+    min-width: 150px;
+    max-width: 200px;
+}
+
+.event {
+    width: 90%;
+    margin-left: 5%;
+    position: absolute;
+    background-color: #009688;
+}
+
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-button {
+    width: 0px;
+    height: 0px;
+}
+::-webkit-scrollbar-thumb {
+    background: #BDBDBD;
+    border: 0px none #ffffff;
+    border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #9E9E9E;
+}
+::-webkit-scrollbar-thumb:active {
+    background: #9E9E9E;
+}
+::-webkit-scrollbar-track {
+    background: #F5F5F5;
+    border: 0px none #ffffff;
+    border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+    background: #F5F5F5;
+}
+::-webkit-scrollbar-track:active {
+    background: #F5F5F5;
+}
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
