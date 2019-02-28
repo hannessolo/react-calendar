@@ -11,7 +11,7 @@ export default class Calendar extends Component {
     this.eventData = [];
 
     for (let i = 0; i < this.NUM_DAYS; i++) {
-      eventData.push(
+      this.eventData.push(
           <CalendarDay key={i} num={i} events={[{ start: 360 + 60 * i, end: 360 + 60 * i + 360 }]} />
       )
     }
