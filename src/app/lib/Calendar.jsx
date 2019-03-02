@@ -14,7 +14,7 @@ export default class Calendar extends Component {
 
   _roundStartTime(startTime) {
 
-    return Math.floor(startTime / this.props.timeStep) * this.props.timeStep; 
+    return Math.floor(startTime / (this.props.timeStep / 60 * 100)) * (this.props.timeStep / 60 * 100); 
 
   }
 

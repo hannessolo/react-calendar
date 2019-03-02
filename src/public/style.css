@@ -29,6 +29,13 @@ html, body {
     max-width: 500px;
 }
 
+.eventTime {
+  color: #cfcfcf;
+  font-family: 'Raleway', sans-serif;
+  padding: 20px;
+  padding-top: 5px;
+}
+
 .event {
     width: 90%;
     margin-left: 5%;
