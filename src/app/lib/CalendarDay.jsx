@@ -7,6 +7,8 @@ export default class CalendarDay extends Component {
     super(props);
 
     this._allowDrop = this._allowDrop.bind(this);
+    this._childLocChanged = this._childLocChanged.bind(this);
+    this._finaliseChildLoc = this._finaliseChildLoc.bind(this);
 
   }
 
@@ -14,8 +16,12 @@ export default class CalendarDay extends Component {
     e.preventDefault();
   }
 
-  _childLocChanged(newTop) {
-    console.log("New start time " + Math.floor(newTop / 60) + 'h' + newTop % 60 + 'm');
+  _childLocChanged(id, newStartTime) {
+    this.props.moveEvent(id, newStartTime, false);
+  }
+
+  _finaliseChildLoc(id, newStartTime) {
+    this.props.moveEvent(id, newStartTime, true);
   }
 
   render() {
@@ -27,6 +33,8 @@ export default class CalendarDay extends Component {
                                  end={c.end}
                                  key={k}
                                  reportLocationChanged={this._childLocChanged}
+                                 reportDragFinished={this._finaliseChildLoc}
+                                 id={c.id}
       />);
     });
 

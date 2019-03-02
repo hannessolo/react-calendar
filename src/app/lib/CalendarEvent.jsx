@@ -5,76 +5,49 @@ export default class CalendarEvent extends Component {
   constructor(props) {
     super(props);
 
-    this.style = {
-      top: this.props.start / 60 * 50,
-      height: (this.props.end - this.props.start) / 60 * 50
-    };
+    this.previousMousePos = 0;
+    this.pixelsPerHour = 30;
 
     this._onDragStart = this._onDragStart.bind(this);
     this._onDrag = this._onDrag.bind(this);
     this._onDragEnd = this._onDragEnd.bind(this);
+    this._mouseDelta = this._mouseDelta.bind(this);
 
-    this.lastDragMousePos = null;
 
+  }
+
+  _yOffsetToTime(offset) {
+    return offset * 60 / this.pixelsPerHour;
+  }
+
+  _timeToYOffset(time) {
+    return time * this.pixelsPerHour / 60;
   }
 
   _onDragStart(e) {
 
+    this.previousMousePos = e.pageY;
     e.dataTransfer.setDragImage(document.createElement('null'), 0, 0);
-    this.lastDragMousePos = e.pageY;
 
+  }
+
+  _mouseDelta(newPageY) {
+    return this.previousMousePos - newPageY;
   }
 
   _onDrag(e) {
 
-    let start = this.lastDragMousePos;
-    let current = e.pageY;
-    let oldTop = this.style.top;
-
-    let difference = current - start;
-
-    this.lastDragMousePos = current;
-
-    let newTop = oldTop + (difference / 60 * 50);
-
-    this.style = {
-      top: newTop,
-      height: (this.props.end - this.props.start) / 60 * 50
-    };
-
-    this.forceUpdate();
+    let newStartTime = this.props.start - this._yOffsetToTime(this._mouseDelta(e.pageY));
+    this.previousMousePos = e.pageY;
+    this.props.reportLocationChanged(this.props.id, newStartTime);
 
   }
 
   _onDragEnd(e) {
 
-    let start = this.lastDragMousePos;
-    let current = e.pageY;
-    let oldTop = this.style.top;
-
-    let difference = current - start;
-
-    this.lastDragMousePos = current;
-
-    let newTop = oldTop + (difference / 60 * 50);
-
-    newTop = Math.round(newTop / 12.5) * 12.5;
-
-    if (newTop < 0) {
-      newTop = 0;
-    } else if (newTop > 1200 - this.style.height) {
-      newTop = 1200 - this.style.height;
-    }
-
-    this.style = {
-      top: newTop,
-      height: (this.props.end - this.props.start) / 60 * 50
-    };
-
-    this.forceUpdate();
-
-    this.props.reportLocationChanged(newTop * 60 / 50);
-
+    let newStartTime = this.props.start - this._yOffsetToTime(this._mouseDelta(e.pageY));
+    this.previousMousePos = e.pageY;
+    this.props.reportDragFinished(this.props.id, newStartTime);
   }
 
   render() {
@@ -83,7 +56,10 @@ export default class CalendarEvent extends Component {
                 onDragEnd={this._onDragEnd}
                 onDrag={this._onDrag}
                 className={"event"}
-                style={this.style}/>
+                style={{
+                    top: this._timeToYOffset(this.props.start),
+                    height: this._timeToYOffset(this.props.end) - this._timeToYOffset(this.props.start)
+                  }}/>
   }
 
 }
