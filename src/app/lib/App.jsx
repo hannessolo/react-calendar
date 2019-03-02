@@ -11,11 +11,11 @@ export default class App extends Component {
         0: {
           start: {
             day: 1,
-            time: 1700
+            time: 2300
           },
           end: {
-            day: 1,
-            time: 1900
+            day: 2,
+            time: 200
           }
         }
       }

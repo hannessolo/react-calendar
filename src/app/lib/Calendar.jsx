@@ -25,15 +25,56 @@ export default class Calendar extends Component {
     }
 
     let event = this.props.events[id];
+    let startDay = event.start.day;
+    let endDay = event.end.day;
+    let startTime = newStartTime;
+    let endTime = event.end.time + (newStartTime - event.start.time);
+
+    /* Handle multi-day case where move goes over 24 */
+    if (startTime < -1) {
+      if (startDay > 0) {
+        startDay--;
+        startTime = 2400 + startTime;
+      } else {
+        startTime = 0;
+        endTime = event.end.time;
+      }
+    } else if (startTime > 2401) {
+      if (startDay < this.props.numDays - 1) {
+        startDay++;
+        startTime = 2400 - startTime;
+      } else {
+        startTime = 2400;
+        startTime = event.start.time;
+      }
+    }
+
+    if (endTime < -1) {
+      if (endDay > 0) {
+        endDay--;
+        endTime = 2400 + endTime;
+      } else {
+        startTime = 0;
+        endTime = event.end.time;
+      }
+    } else if (endTime > 2401) {
+      if (endDay < this.props.numDays - 1) {
+        endDay++;
+        endTime = 2400 - endTime;
+      } else {
+        endDay = 0;
+        endTime = event.end.time;
+      }
+    }
 
     event = {
       start: {
-        day: event.start.day,
-        time: newStartTime
+        day: startDay,
+        time: startTime
       },
       end: {
-        day: event.end.day,
-        time: event.end.time + (newStartTime - event.start.time)
+        day: endDay,
+        time: endTime
       }
     }
 
@@ -52,10 +93,23 @@ export default class Calendar extends Component {
     for (let eventId in events) {
 
       /* First day start and end times */
+      let day = events[eventId].start.day;
+      let endDay = events[eventId].end.day;
       let startTime = events[eventId].start.time;
-      let endTime = events[eventId].end.time;
+      let endTime;
+      while (day !== endDay) {
+        endTime = 2400;
+        dayEvents[day].push({
+          start: startTime,
+          end: endTime,
+          id: eventId
+        });
+        startTime = 0;
+        day++;
+      }
 
-      dayEvents[events[eventId].start.day].push({
+      endTime = events[eventId].end.time;
+      dayEvents[day].push({
         start: startTime,
         end: endTime,
         id: eventId
