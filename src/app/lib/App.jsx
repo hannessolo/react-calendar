@@ -10,12 +10,12 @@ export default class App extends Component {
       evs: {
         0: {
           start: {
-            day: 1,
-            time: 2300
+            day: 0,
+            time: 1100
           },
           end: {
-            day: 2,
-            time: 200
+            day: 0,
+            time: 1300
           }
         }
       }

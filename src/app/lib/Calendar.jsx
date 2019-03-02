@@ -9,6 +9,7 @@ export default class Calendar extends Component {
     this.sortIntoDayEvents = this.sortIntoDayEvents.bind(this);
     this.eventMoved = this.eventMoved.bind(this);
     this._roundStartTime = this._roundStartTime.bind(this);
+    this.eventDayMoved = this.eventDayMoved.bind(this);
 
   }
 
@@ -82,6 +83,33 @@ export default class Calendar extends Component {
 
   }
 
+  eventDayMoved(id, startDayDelta, endDayDelta) {
+
+    let event = this.props.events[id];
+    let startDay = event.start.day + startDayDelta;
+    let endDay = event.end.day + endDayDelta;
+
+    if (startDay < 0) {
+      return;
+    } else if (endDay > this.props.numDays) {
+      return;
+    }
+
+    event = {
+      start: {
+        day: startDay,
+        time: event.start.time
+      },
+      end: {
+        day: endDay,
+        time: event.end.time
+      }
+    }
+
+    this.props.moved(id, event);
+
+  }
+
   sortIntoDayEvents(events) {
 
     /* Create an empty 2d array. Because this is javascript :( */
@@ -114,7 +142,6 @@ export default class Calendar extends Component {
         end: endTime,
         id: eventId
       });
-      console.log(dayEvents)
 
     }
 
@@ -134,6 +161,7 @@ export default class Calendar extends Component {
             num={i} 
             events={dayEvents[i]}
             moveEvent={this.eventMoved}
+            moveEventDay={this.eventDayMoved}
           />
       )
     }
