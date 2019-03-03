@@ -6,14 +6,21 @@ export default class Calendar extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      nextCreationId: Object.keys(props.events).length
+    }
+
     this.sortIntoDayEvents = this.sortIntoDayEvents.bind(this);
     this.eventMoved = this.eventMoved.bind(this);
-    this._roundStartTime = this._roundStartTime.bind(this);
+    this._roundTime = this._roundTime.bind(this);
     this.eventDayMoved = this.eventDayMoved.bind(this);
+    this.createEvent = this.createEvent.bind(this);
+    this.resizeEvent = this.resizeEvent.bind(this);
+    this.endResizeEvent = this.endResizeEvent.bind(this);
 
   }
 
-  _roundStartTime(startTime) {
+  _roundTime(startTime) {
 
     return Math.floor(startTime / (this.props.timeStep / 60 * 100)) * (this.props.timeStep / 60 * 100); 
 
@@ -22,7 +29,7 @@ export default class Calendar extends Component {
   eventMoved(id, newStartTime, shouldRound) {
 
     if (shouldRound) {
-      newStartTime = this._roundStartTime(newStartTime);
+      newStartTime = this._roundTime(newStartTime);
     }
 
     let event = this.props.events[id];
@@ -98,11 +105,72 @@ export default class Calendar extends Component {
     event = {
       start: {
         day: startDay,
-        time: event.start.time
+        time: this._roundTime(event.start.time)
       },
       end: {
         day: endDay,
-        time: event.end.time
+        time: this._roundTime(event.end.time)
+      }
+    }
+
+    this.props.moved(id, event);
+
+  }
+
+  createEvent(id, start) {
+
+    event = {
+      start: start,
+      end: {
+        time: start.time + 15,
+        day: start.day
+      }
+    }
+
+    this.setState(state => ({
+      nextCreationId: state.nextCreationId + 1
+    }));
+    console.log(this.state.nextCreationId);
+    this.props.moved(id, event);
+  }
+
+  resizeEvent(id, startDelta, endDelta) {
+
+    let event = this.props.events[id];
+
+    let startTime = event.start.time + startDelta;
+    let endTime = event.end.time + endDelta;
+
+    if (endTime < startTime + 15 && event.start.day == event.end.day) {
+      endTime = startTime + 15;
+    }
+
+    event = {
+      start: {
+        time: startTime,
+        day: event.start.day
+      },
+      end: {
+        time: endTime,
+        day: event.end.day
+      }
+    }
+
+    this.props.moved(id, event);
+
+  }
+
+  endResizeEvent(id) {
+    let event = this.props.events[id];
+
+    event = {
+      start: {
+        time: this._roundTime(event.start.time),
+        day: event.start.day
+      },
+      end: {
+        time: this._roundTime(event.end.time),
+        day: event.end.day
       }
     }
 
@@ -162,6 +230,10 @@ export default class Calendar extends Component {
             events={dayEvents[i]}
             moveEvent={this.eventMoved}
             moveEventDay={this.eventDayMoved}
+            createEvent={this.createEvent}
+            resizeEvent={this.resizeEvent}
+            endResizeEvent={this.endResizeEvent}
+            nextCreatingId={this.state.nextCreationId}
           />
       )
     }

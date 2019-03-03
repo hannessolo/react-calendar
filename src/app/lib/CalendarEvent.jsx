@@ -7,7 +7,6 @@ export default class CalendarEvent extends Component {
 
     this.previousMouseYPos = 0;
     this.startMouseXPos = 0;
-    this.pixelsPerHour = 30;
 
     this._onDragStart = this._onDragStart.bind(this);
     this._onDrag = this._onDrag.bind(this);
@@ -16,16 +15,21 @@ export default class CalendarEvent extends Component {
 
   }
 
-  _yOffsetToTime(offset) {
-    return offset * 60 / this.pixelsPerHour;
+  static getPixelsPerHour() {
+    return 30;
   }
 
-  _timeToYOffset(time) {
-    return time * this.pixelsPerHour / 60;
+  static _yOffsetToTime(offset) {
+    return offset * 60 / CalendarEvent.getPixelsPerHour();
+  }
+
+  static _timeToYOffset(time) {
+    return time * CalendarEvent.getPixelsPerHour() / 60;
   }
 
   _onDragStart(e) {
 
+    e.stopPropagation();
     this.previousMouseYPos = e.pageY;
     this.startMouseXPos = e.pageX;
     e.dataTransfer.setDragImage(document.createElement('null'), 0, 0);
@@ -38,6 +42,8 @@ export default class CalendarEvent extends Component {
 
   _onDrag(e) {
 
+    e.stopPropagation();
+
     if (e.pageX > this.startMouseXPos + 100) {
       console.log("Went to the right");
       this.props.reportDayChanged(this.props.id, 1, 1);
@@ -48,7 +54,7 @@ export default class CalendarEvent extends Component {
       this.startMouseXPos = e.pageX;
     }
 
-    let newStartTime = this.props.start - this._yOffsetToTime(this._mouseDelta(e.pageY));
+    let newStartTime = this.props.start - CalendarEvent._yOffsetToTime(this._mouseDelta(e.pageY));
     this.previousMouseYPos = e.pageY;
     this.props.reportLocationChanged(this.props.id, newStartTime);
 
@@ -56,7 +62,7 @@ export default class CalendarEvent extends Component {
 
   _onDragEnd(e) {
 
-    let newStartTime = this.props.start - this._yOffsetToTime(this._mouseDelta(e.pageY));
+    let newStartTime = this.props.start - CalendarEvent._yOffsetToTime(this._mouseDelta(e.pageY));
     this.previousMouseYPos = e.pageY;
     this.props.reportDragFinished(this.props.id, newStartTime);
   }
@@ -71,13 +77,14 @@ export default class CalendarEvent extends Component {
 
   render() {
     return <div draggable={true}
+                onMouseDown={(e) => {e.stopPropagation()}}
                 onDragStart={this._onDragStart}
                 onDragEnd={this._onDragEnd}
                 onDrag={this._onDrag}
                 className={"event"}
                 style={{
-                    top: this._timeToYOffset(this.props.start),
-                    height: this._timeToYOffset(this.props.end) - this._timeToYOffset(this.props.start)
+                    top: CalendarEvent._timeToYOffset(this.props.start),
+                    height: CalendarEvent._timeToYOffset(this.props.end) - CalendarEvent._timeToYOffset(this.props.start)
                   }}>
 
                   <div className={"eventTime"}>{this._timeToText(this.props.start)} - {this._timeToText(this.props.end)}</div>
