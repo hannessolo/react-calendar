@@ -14,6 +14,25 @@ html, body {
     overflow: scroll;
 }
 
+.resizeHandle {
+  flex-basis: 10px;
+  width: 100%;
+  background-color: #00000018;
+}
+
+.event {
+  flex-grow: 1;
+}
+
+.eventContainer {
+  width: 90%;
+  margin-left: 5%;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: #009688;
+}
+
 .calendarDay {
     height: 1200px;
     position: relative;
@@ -34,13 +53,6 @@ html, body {
   font-family: 'Raleway', sans-serif;
   padding: 20px;
   padding-top: 5px;
-}
-
-.event {
-    width: 90%;
-    margin-left: 5%;
-    position: absolute;
-    background-color: #009688;
 }
 
 

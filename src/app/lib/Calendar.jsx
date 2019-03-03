@@ -27,16 +27,17 @@ export default class Calendar extends Component {
   }
 
   eventMoved(id, newStartTime, shouldRound) {
-
-    if (shouldRound) {
-      newStartTime = this._roundTime(newStartTime);
-    }
-
+    
     let event = this.props.events[id];
     let startDay = event.start.day;
     let endDay = event.end.day;
     let startTime = newStartTime;
     let endTime = event.end.time + (newStartTime - event.start.time);
+
+    if (shouldRound) {
+      startTime = this._roundTime(startTime);
+      endTime = this._roundTime(endTime);
+    }
 
     /* Handle multi-day case where move goes over 24 */
     if (startTime < -1) {

@@ -12,6 +12,8 @@ export default class CalendarEvent extends Component {
     this._onDrag = this._onDrag.bind(this);
     this._onDragEnd = this._onDragEnd.bind(this);
     this._mouseDelta = this._mouseDelta.bind(this);
+    this._resize = this._resize.bind(this);
+    this._resizeEnd = this._resizeEnd.bind(this);
 
   }
 
@@ -75,20 +77,46 @@ export default class CalendarEvent extends Component {
     : (Math.floor(time % 100 * 60 / 100)));
   }
 
+  _resize(e) {
+    e.stopPropagation();
+
+    let endTimeDelta = CalendarEvent._yOffsetToTime(this._mouseDelta(e.pageY));
+    this.previousMouseYPos = e.pageY;
+    this.props.reportResized(this.props.id, 0, -1 * endTimeDelta);
+
+  }
+
+  _resizeEnd(e) {
+    e.stopPropagation();
+    console.log("here");
+    this.props.reportDragFinished(this.props.id, this.props.start);
+  }
+
   render() {
-    return <div draggable={true}
-                onMouseDown={(e) => {e.stopPropagation()}}
-                onDragStart={this._onDragStart}
-                onDragEnd={this._onDragEnd}
-                onDrag={this._onDrag}
-                className={"event"}
+    return <div className="eventContainer"
                 style={{
-                    top: CalendarEvent._timeToYOffset(this.props.start),
-                    height: CalendarEvent._timeToYOffset(this.props.end) - CalendarEvent._timeToYOffset(this.props.start)
-                  }}>
-
+                  top: CalendarEvent._timeToYOffset(this.props.start),
+                  height: CalendarEvent._timeToYOffset(this.props.end) - CalendarEvent._timeToYOffset(this.props.start)
+                }}>
+              <div draggable={true}
+                    /* Prevent mouseDown from creating event in background */
+                    onMouseDown={(e) => {e.stopPropagation()}}
+                    onDragStart={this._onDragStart}
+                    onDragEnd={this._onDragEnd}
+                    onDrag={this._onDrag}
+                    className={"event"}>
                   <div className={"eventTime"}>{this._timeToText(this.props.start)} - {this._timeToText(this.props.end)}</div>
-
+              </div>
+              <div 
+                draggable={true}
+                className={"resizeHandle"} 
+                onDragStart={this._onDragStart}
+                onDrag={this._resize}
+                onDragEnd={this._resizeEnd}
+                /* Prevent mouseDown from creating event in background */
+                onMouseDown={(e) => e.stopPropagation()}
+                onMouseUp={(e) => e.stopPropagation()}
+              ></div>
             </div>
   }
 

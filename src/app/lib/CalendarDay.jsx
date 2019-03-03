@@ -13,6 +13,7 @@ export default class CalendarDay extends Component {
     this._onCreateEvent = this._onCreateEvent.bind(this);
     this._onMouseMove = this._onMouseMove.bind(this);
     this._onMouseUp = this._onMouseUp.bind(this);
+    this._childResized = this._childResized.bind(this);
 
     this.creating = false;
     this.creatingId = this.props.nextCreatingId;
@@ -81,6 +82,7 @@ export default class CalendarDay extends Component {
                                  reportLocationChanged={this._childLocChanged}
                                  reportDragFinished={this._finaliseChildLoc}
                                  reportDayChanged={this._childDayChanged}
+                                 reportResized={this._childResized}
                                  id={c.id}
       />);
     });

@@ -10,11 +10,11 @@ export default class App extends Component {
       evs: {
         0: {
           start: {
-            day: 0,
+            day: 1,
             time: 1100
           },
           end: {
-            day: 0,
+            day: 1,
             time: 1300
           }
         }
@@ -37,7 +37,7 @@ export default class App extends Component {
   render() {
 
     return <Calendar 
-    numDays={3}
+    numDays={5}
     events={this.state.evs}
     moved={this._moved}
     timeStep={15}
